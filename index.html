@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+    
+</head>
+<div class="container">
+    <div class ="row">
+        <div class="jumbotron">
+            <h1> Star Wars Hangman</h1>
+            <h3> You have Nine Guesses, press any letter to begin!</h3>
+        </div>
+    </div>
+    <div class="row">
+        <div class="jumbotron">
+            <h2 id="empty-words">_ _ _ _</h2>
+        </div>
+    </div>
+    <div class="row">
+        <div class="jumbotron">
+            <h2>Wrong Guesses:</h2>
+            <h3><span id="wrongLetters"></span></h3>
+            <br>
+            <h3>Guesses Remaining: <span id="spanGuesses"></span></h3>
+            <br>
+            <h3>Wins: <span id="spanWins"></span></h3>
+            <h3>Losses: <span id="spanLosses"></span></h3>
+        </div>
+    </div>
+
+</div>
+<body>
+    <script>
+        var starWarsWords = ["force", "yoda", "rebels", "empire", "jedi", "sith"]
+        var randomWord = Math.floor(Math.random() * starWarsWords.length);
+        var hangmanWord = starWarsWords[randomWord];
+        var wins = 0;
+        var loss = 0;
+        var guesses= [];
+        var underscores = [];
+        var wrongLetter = [];
+        var guessesLeft = 9;
+        var correctLetterCounter= 0;
+
+
+        function winOrLose(){
+            if(correctLetterCounter === hangmanWord.length){
+                wins++;
+                document.getElementById("spanWins").textContent = wins;
+                game();
+            }else if(guessesLeft === 0){
+                loss++;
+                document.getElementById("spanLosses").textContent = loss;
+                game();
+            }
+        };
+        function game(){
+            hangmanWord= starWarsWords[randomWord];
+            underscores= [];
+            console.log(hangmanWord);
+            for(var i = 0; i < hangmanWord.length; i++){
+                underscores.push("_");
+            }
+            document.getElementById("empty-words").textContent = underscores;
+
+            wrongLetter= [];
+            guessesLeft= 9;
+            
+           
+        };
+        
+        document.onkeyup = function(event){
+            var userInput = String.fromCharCode(event.keyCode).toLowerCase();
+
+            if(wrongLetter.indexOf(userInput) === -1){
+                for(var i = 0; i < hangmanWord.length; i++){
+                    if(hangmanWord[i] === userInput){
+                        underscores[i] = userInput;
+                        document.getElementById("empty-words").textContent = underscores;
+                        console.log(underscores);
+                        
+                        correctLetterCounter++;
+                        winOrLose();
+
+                    }else{
+                        i= hangmanWord.length;
+                        wrongLetter.push(userInput);
+                        document.getElementById("wrongLetters").textContent = wrongLetter;
+                        
+                        document.getElementById("spanGuesses").textContent = guessesLeft;
+                        guessesLeft--;
+                    
+                        winOrLose();
+                }
+
+            }
+            }
+        };
+        game();
+
+    
+    </script>
+</body>
+</html>
